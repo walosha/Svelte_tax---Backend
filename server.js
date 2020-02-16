@@ -1,15 +1,10 @@
+const { GraphQLServer } = require('graphql-yoga');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
-process.on('uncaughtException', err => {
-  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-  console.log(err.name, err.message);
-  process.exit(1);
-});
+const Query = require('./graphQL/resolvers/Query');
+const Mutation = require('./graphQL/resolvers/Mutation');
 
 dotenv.config({ path: './config.env' });
-const app = require('./app');
-
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
@@ -23,22 +18,16 @@ mongoose
   })
   .then(() => console.log('DB connection successful!'));
 
-const port = process.env.PORT || 3000;
-const server = app.listen(port, () => {
-  console.log(`App running on port ${port}...`);
+const resolvers = {
+  Query,
+  Mutation
+};
+
+const server = new GraphQLServer({
+  typeDefs: './graphQL/schema.graphql',
+  resolvers
 });
 
-process.on('unhandledRejection', err => {
-  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
-  console.log(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
-  });
-});
-
-process.on('SIGTERM', () => {
-  console.log('👋 SIGTERM RECEIVED. Shutting down gracefully');
-  server.close(() => {
-    console.log('💥 Process terminated!');
-  });
+mongoose.connection.once('open', function() {
+  server.start(() => console.log('Server is running on localhost:4000'));
 });
