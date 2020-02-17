@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
 
-const Driver = mongoose.model('User', {
-  fullname: String,
-  username: String,
+const Driver = mongoose.model('Driver', {
+  firstName: String,
+  lastName: String,
+  staffId: {
+    type: String,
+    unique: true
+  },
   driverImage: String,
   driverAge: Number,
   phoneNumber: String,
   vehicleNumber: String,
-  vehicleType: String,
-  vehicleModel: String,
   city: String
 });
 

@@ -2,7 +2,7 @@ const User = require('../../models/userModel');
 const Driver = require('../../models/driverModel');
 
 const Mutation = {
-  addUser: async (_, { fullname, username, phoneNumber, city }) => {
+  createUser: async (_, { fullname, username, phoneNumber, city }) => {
     const user = new User({ fullname, username, phoneNumber, city });
     await user.save();
     return user;
@@ -12,29 +12,27 @@ const Mutation = {
     await User.findByIdAndRemove(id);
     return 'User deleted';
   },
-  addDriver: async (
+  createDriver: async (
     parent,
     {
-      fullname,
-      username,
+      firstName,
+      lastName,
+      staffId,
       driverImage,
       driverAge,
       phoneNumber,
       vehicleNumber,
-      vehicleType,
-      vehicleModel,
       city
     }
   ) => {
-    const driver = new User({
-      fullname,
-      username,
+    const driver = new Driver({
+      firstName,
+      lastName,
+      staffId,
       driverImage,
       driverAge,
       phoneNumber,
       vehicleNumber,
-      vehicleType,
-      vehicleModel,
       city
     });
     await driver.save();

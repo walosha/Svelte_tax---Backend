@@ -1,6 +1,8 @@
 type Query {
   getUser(id: ID!): User
   getUsers: [User]
+  getDriver(id: ID!): Driver
+  getDrivers: [Driver]
 }
 type User {
   id: ID!
@@ -12,14 +14,13 @@ type User {
 
 type Driver {
   id: ID!
-  fullname: String!
-  username: String!
+  firstName: String!
+  lastName: String!
+  staffId: String!
   driverImage: String!
-  driverAge: Number!
+  driverAge: Int!
   phoneNumber: String!
   vehicleNumber: String!
-  vehicleType: String!
-  vehicleModel: String!
   city: String!
 }
 
@@ -34,16 +35,15 @@ type Mutation {
   deleteUser(id: ID!): String
 
   createDriver(
-    fullname: String!
-    username: String!
+    firstName: String!
+    lastName: String!
+    staffId: String!
     driverImage: String!
-    driverAge: Number!
+    driverAge: Int!
     phoneNumber: String!
     vehicleNumber: String!
-    vehicleType: String!
-    vehicleModel: String!
     city: String!
-  ): User!
+  ): Driver!
 
   deleteDriver(id: ID!): String
 }
