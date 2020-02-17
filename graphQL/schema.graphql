@@ -10,12 +10,40 @@ type User {
   city: String!
 }
 
+type Driver {
+  id: ID!
+  fullname: String!
+  username: String!
+  driverImage: String!
+  driverAge: Number!
+  phoneNumber: String!
+  vehicleNumber: String!
+  vehicleType: String!
+  vehicleModel: String!
+  city: String!
+}
+
 type Mutation {
-  addUser(
+  createUser(
     fullname: String!
     username: String!
     phoneNumber: String!
     city: String!
   ): User!
+
   deleteUser(id: ID!): String
+
+  createDriver(
+    fullname: String!
+    username: String!
+    driverImage: String!
+    driverAge: Number!
+    phoneNumber: String!
+    vehicleNumber: String!
+    vehicleType: String!
+    vehicleModel: String!
+    city: String!
+  ): User!
+
+  deleteDriver(id: ID!): String
 }
