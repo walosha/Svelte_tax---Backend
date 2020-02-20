@@ -2,7 +2,7 @@ const { composeWithMongoose } = require('graphql-compose-mongoose/node8');
 const { schemaComposer } = require('graphql-compose');
 const User = require('../../models/userModel');
 
-const customizationOptions = {}; // left it empty for simplicity, described below
+const customizationOptions = {};
 const UserTC = composeWithMongoose(User, customizationOptions);
 
 exports.UserQuery = schemaComposer.Query.addFields({
