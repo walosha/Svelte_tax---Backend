@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Please Provide a Valid email']
   },
+  image: String,
   city: {
     type: String,
     required: [true, 'Please provide us your city!']
@@ -49,5 +50,7 @@ const UserSchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetExpiry: Number
 });
+
+//UserSchema.set('discriminatorKey', 'DKey');
 
 module.exports = mongoose.model('User', UserSchema);

@@ -1,57 +1,13 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+const User = require('./userModel');
 
 const CustomerSchema = new mongoose.Schema({
   customerID: {
     type: String,
     required: [true, 'Customer Id is Required']
   },
-  firstName: {
-    type: String,
-    required: [true, 'Please provide us your first name!']
-  },
-  lastName: {
-    type: String,
-    required: [true, 'Please provide us your last name!']
-  },
-  email: {
-    type: String,
-    required: [true, 'Please Provide us your email address'],
-    unique: true,
-    lowercase: true,
-    validate: [validator.isEmail, 'Please Provide a Valid email']
-  },
-  city: {
-    type: String,
-    required: [true, 'Please provide us your city!']
-  },
-  phoneNumber: String,
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-    minlength: 8,
-    select: false //THIS OPTION HIDE THE PASSWORD FROM BEING RETURNED TO USERS}
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'PasswordConfirme is required'],
-    validate: {
-      // THIS ONLY WORKS ON SAVE or CREATE
-      validator: function(el) {
-        return el === this.password;
-      },
-      message: 'Password do not match'
-    }
-  },
-  active: {
-    type: Boolean,
-    default: true,
-    select: false
-  },
-  passswordChangedAt: Number,
-  passwordResetToken: String,
-  passwordResetExpiry: Number,
+
   trip: { type: Number }
 });
 
-module.exports = mongoose.model('Custotomer', CustomerSchema);
+module.exports = User.discriminator('Customer', CustomerSchema);
