@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const UserSchema = new mongoose.Schema({
+const CustomerSchema = new mongoose.Schema({
+  customerID: {
+    type: String,
+    required: [true, 'Customer Id is Required']
+  },
   firstName: {
     type: String,
     required: [true, 'Please provide us your first name!']
@@ -39,7 +43,6 @@ const UserSchema = new mongoose.Schema({
       message: 'Password do not match'
     }
   },
-
   active: {
     type: Boolean,
     default: true,
@@ -47,7 +50,8 @@ const UserSchema = new mongoose.Schema({
   },
   passswordChangedAt: Number,
   passwordResetToken: String,
-  passwordResetExpiry: Number
+  passwordResetExpiry: Number,
+  trip: { type: Number }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('Custotomer', CustomerSchema);

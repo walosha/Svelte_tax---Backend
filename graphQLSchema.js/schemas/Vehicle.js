@@ -1,11 +1,10 @@
 const { composeWithMongoose } = require('graphql-compose-mongoose/node8');
-const { schemaComposer } = require('graphql-compose');
 const Vehicle = require('../../models/vehicleModel');
 
 const customizationOptions = {};
 const VehicleTC = composeWithMongoose(Vehicle, customizationOptions);
 
-exports.VehicleQuery = schemaComposer.Query.addFields({
+exports.VehicleQuery = {
   vehicleTCById: VehicleTC.getResolver('findById'),
   vehicleTCByIds: VehicleTC.getResolver('findByIds'),
   vehicleTCOne: VehicleTC.getResolver('findOne'),
@@ -13,8 +12,8 @@ exports.VehicleQuery = schemaComposer.Query.addFields({
   vehicleTCCount: VehicleTC.getResolver('count'),
   vehicleTCConnection: VehicleTC.getResolver('connection'),
   vehicleTCPagination: VehicleTC.getResolver('pagination')
-});
-exports.VehicleMutation = schemaComposer.Mutation.addFields({
+};
+exports.VehicleMutation = {
   vehicleTCCreateOne: VehicleTC.getResolver('createOne'),
   vehicleTCCreateMany: VehicleTC.getResolver('createMany'),
   vehicleTCUpdateById: VehicleTC.getResolver('updateById'),
@@ -23,4 +22,4 @@ exports.VehicleMutation = schemaComposer.Mutation.addFields({
   vehicleTCRemoveById: VehicleTC.getResolver('removeById'),
   vehicleTCRemoveOne: VehicleTC.getResolver('removeOne'),
   vehicleTCRemoveMany: VehicleTC.getResolver('removeMany')
-});
+};

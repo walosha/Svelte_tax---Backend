@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const VehicleSchema = new mongoose.Schema({
   vehicleID: {
     type: String,
     required: [true, 'Please provide us your Vehicle ID!']
@@ -21,4 +21,4 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('Vehicle', UserSchema);
+module.exports = mongoose.model('Vehicle', VehicleSchema);
