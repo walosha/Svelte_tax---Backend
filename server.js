@@ -19,21 +19,26 @@ const server = new ApolloServer({
   playground: true,
   introspection: true,
   tracing: true,
-  path: '/'
+  path: '/',
+  context: req => {
+    console.log(req.req.headers.authorization);
+  }
 });
 
 server.applyMiddleware({
   app,
   path: '/',
   cors: true,
-  onHealthCheck: () =>
-    new Promise((resolve, reject) => {
+  onHealthCheck: () => {
+    console.log('Checked health');
+    return Promise((resolve, reject) => {
       if (mongoose.connection.readyState > 0) {
         resolve();
       } else {
         reject();
       }
-    })
+    });
+  }
 });
 mongoose
   .connect(DB, {
