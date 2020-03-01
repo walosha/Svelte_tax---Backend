@@ -1,4 +1,3 @@
-module.exports = function adminAccess(resolvers) {
   Object.keys(resolvers).forEach(k => {
     resolvers[k] = resolvers[k].wrapResolve(next => rp => {
       console.log('context', rp);

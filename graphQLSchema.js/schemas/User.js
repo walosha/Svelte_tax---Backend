@@ -1,6 +1,6 @@
 const { composeWithMongoose } = require('graphql-compose-mongoose/node8');
 const User = require('../../models/userModel');
-const adminAccess = require('../../utils/rootMutation');
+const adminAccess = require('../../utils/adminAccess');
 
 const customizationOptions = {};
 const UserTC = composeWithMongoose(User, customizationOptions);
@@ -27,5 +27,3 @@ exports.UserMutation = {
   userRemoveOne: UserTC.getResolver('removeOne'),
   userRemoveMany: UserTC.getResolver('removeMany')
 };
-
-console.log('User,', UserTC.getType());

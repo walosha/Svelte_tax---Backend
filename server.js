@@ -21,8 +21,9 @@ const server = new ApolloServer({
   introspection: true,
   tracing: true,
   path: '/',
-  context: req => {
-    console.log('Serverjs', req.req.headers.authorization);
+  context: ({ req }) => {
+    //.log('Serverjs', req.req.headers.authorization);
+    return req.headers.authorization;
   }
 });
 
@@ -33,7 +34,6 @@ server.applyMiddleware({
   path: '/',
   cors: true,
   onHealthCheck: () => {
-    console.log('Checked health');
     return Promise((resolve, reject) => {
       if (mongoose.connection.readyState > 0) {
         resolve();
