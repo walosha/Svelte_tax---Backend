@@ -32,8 +32,8 @@ const createSendToken = (user, statusCode, req, res) => {
   });
 };
 
-module.exports = (req, res, next) => {
-  const token = req.headers.authorization;
+exports.isAuth = (req, res, next) => {
+  const token = req.req;
 
   if (!token || token === '') {
     req.isAuth = false;

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const graphqlSchema = require('./graphQLSchema.js');
 const isAuth = require('./utils/isAuth');
+const model = require('./models');
 
 const app = express();
 
@@ -22,8 +23,10 @@ const server = new ApolloServer({
   tracing: true,
   path: '/',
   context: ({ req }) => {
-    //.log('Serverjs', req.req.headers.authorization);
-    return req.headers.authorization;
+    return {
+      req: req.headers.authorization,
+      model
+    };
   }
 });
 

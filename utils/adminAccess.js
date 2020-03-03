@@ -1,8 +1,8 @@
-exports.adminAccess = function(resolvers) {
+module.exports = function accessToken(resolvers) {
   Object.keys(resolvers).forEach(k => {
     resolvers[k] = resolvers[k].wrapResolve(next => rp => {
-      if (!rp.context.admin) {
-        throw new Error('You should be admin, to have access to this action.');
+      if (!rp.context.req) {
+        throw new Error('You have no Access Token ');
       }
       return next(rp);
     });

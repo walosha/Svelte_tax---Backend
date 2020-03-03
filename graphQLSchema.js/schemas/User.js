@@ -1,12 +1,12 @@
 const { composeWithMongoose } = require('graphql-compose-mongoose/node8');
 const User = require('../../models/userModel');
-const { adminAccess } = require('../../utils/adminAccess');
+const accessToken = require('../../utils/adminAccess');
 
 const customizationOptions = {};
 const UserTC = composeWithMongoose(User, customizationOptions);
 
 exports.UserQuery = {
-  ...adminAccess({
+  ...accessToken({
     userById: UserTC.getResolver('findById'),
     userByIds: UserTC.getResolver('findByIds'),
     userOne: UserTC.getResolver('findOne'),
@@ -19,11 +19,13 @@ exports.UserQuery = {
 
 exports.UserMutation = {
   userCreateOne: UserTC.getResolver('createOne'),
-  userCreateMany: UserTC.getResolver('createMany'),
-  userUpdateById: UserTC.getResolver('updateById'),
-  userUpdateOne: UserTC.getResolver('updateOne'),
-  userUpdateMany: UserTC.getResolver('updateMany'),
-  userRemoveById: UserTC.getResolver('removeById'),
-  userRemoveOne: UserTC.getResolver('removeOne'),
-  userRemoveMany: UserTC.getResolver('removeMany')
+  ...accessToken({
+    userCreateMany: UserTC.getResolver('createMany'),
+    userUpdateById: UserTC.getResolver('updateById'),
+    userUpdateOne: UserTC.getResolver('updateOne'),
+    userUpdateMany: UserTC.getResolver('updateMany'),
+    userRemoveById: UserTC.getResolver('removeById'),
+    userRemoveOne: UserTC.getResolver('removeOne'),
+    userRemoveMany: UserTC.getResolver('removeMany')
+  })
 };
