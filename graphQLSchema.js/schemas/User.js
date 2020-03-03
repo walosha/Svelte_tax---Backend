@@ -1,6 +1,6 @@
 const { composeWithMongoose } = require('graphql-compose-mongoose/node8');
 const User = require('../../models/userModel');
-const adminAccess = require('../../utils/adminAccess');
+const { adminAccess } = require('../../utils/adminAccess');
 
 const customizationOptions = {};
 const UserTC = composeWithMongoose(User, customizationOptions);
