@@ -2,8 +2,11 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
+const morgan = require('morgan');
 const graphqlSchema = require('./graphQLSchema.js');
-const isAuth = require('./utils/isAuth');
+const globaErrorHnadler = require('./controllers/errorController');
+const { isAuth } = require('./utils/isAuth');
 const model = require('./models');
 
 const app = express();
@@ -14,6 +17,9 @@ const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
 );
+
+app.use(cors());
+app.use(morgan('dev'));
 
 const server = new ApolloServer({
   schema: graphqlSchema,
@@ -34,7 +40,7 @@ app.use('/', isAuth);
 
 server.applyMiddleware({
   app,
-  path: '/',
+  path: '/graphql',
   cors: true,
   onHealthCheck: () => {
     return Promise((resolve, reject) => {
@@ -61,3 +67,5 @@ app.listen({ port: process.env.PORT }, () => {
   console.log(`🚀 Server listening on port ${process.env.PORT}`);
   console.log(`😷 Health checks available at ${process.env.HEALTH_ENDPOINT}`);
 });
+
+app.use(globaErrorHnadler);
