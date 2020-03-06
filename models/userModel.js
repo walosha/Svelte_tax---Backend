@@ -54,6 +54,4 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-//UserSchema.set('discriminatorKey', 'DKey');
-
 module.exports = mongoose.model('User', UserSchema);

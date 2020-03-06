@@ -1,4 +1,4 @@
-const usermodel = require('./userModel');
+const userModel = require('./userModel');
 const customerModel = require('./customerModel');
 const driverModel = require('./driverModel');
 const paymentModel = require('./paymentModel');
@@ -7,7 +7,7 @@ const tripModel = require('./tripModel');
 const vehicleModel = require('./vehicleModel');
 
 module.exports = {
-  usermodel,
+  userModel,
   customerModel,
   driverModel,
   paymentModel,
