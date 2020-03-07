@@ -1,11 +1,28 @@
 const { composeWithMongoose } = require('graphql-compose-mongoose/node8');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/userModel');
 const accessToken = require('../../utils/adminAccess');
 
 const customizationOptions = {};
 const UserTC = composeWithMongoose(User, customizationOptions);
+
+// ADDED TOKEN GRAPHQL SCHEMA
+UserTC.addFields({
+  token: {
+    type: 'String',
+    description: 'Token of authenticated user.'
+  }
+});
+
+//CREATE TOKEN
+
+const tokenSign = function(id) {
+  return jwt.sign({ userId: id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN
+  });
+};
+
+//LOGIN MUTATTION
 
 UserTC.addResolver({
   kind: 'mutation',
@@ -16,26 +33,25 @@ UserTC.addResolver({
   },
   type: UserTC.getResolver('updateById').getType(),
 
-  resolve: async ({ args, context: { model, req } }) => {
+  resolve: async ({
+    args,
+    context: {
+      model: { userModel }
+    }
+  }) => {
     let user = null;
-    console.log(args);
-    console.log(model.userModel());
-    console.log(req);
 
-    user = await User.findOne({ email: args.email });
-
-    console.log('User---', User);
+    user = await userModel.findOne({ email: args.email }).select('+password');
 
     if (!user) {
       throw new Error('User does not exist.');
     }
-    const isEqual = await bcrypt.compare(args.password, user.password);
+    const isEqual = await user.validatePassword(args.password, user.password);
     if (!isEqual) {
       throw new Error('Password is not correct.');
     }
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_COOKIE_EXPIRES_IN
-    });
+    const token = tokenSign(user.id);
+
     return {
       recordId: user._id,
       record: {
@@ -60,6 +76,7 @@ exports.UserQuery = {
 
 exports.UserMutation = {
   userCreateOne: UserTC.getResolver('createOne'),
+  UserLogin: UserTC.getResolver('login'),
   ...accessToken({
     userCreateMany: UserTC.getResolver('createMany'),
     userUpdateById: UserTC.getResolver('updateById'),
@@ -67,7 +84,6 @@ exports.UserMutation = {
     userUpdateMany: UserTC.getResolver('updateMany'),
     userRemoveById: UserTC.getResolver('removeById'),
     userRemoveOne: UserTC.getResolver('removeOne'),
-    userRemoveMany: UserTC.getResolver('removeMany'),
-    UserLogin: UserTC.getResolver('login')
+    userRemoveMany: UserTC.getResolver('removeMany')
   })
 };
