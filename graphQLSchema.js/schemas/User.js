@@ -1,7 +1,7 @@
 const { composeWithMongoose } = require('graphql-compose-mongoose/node8');
 const { signToken } = require('../../controllers/authController');
 const User = require('../../models/userModel');
-const accessToken = require('../../utils/adminAccess');
+const { accessToken } = require('../../controllers/authController');
 const AppError = require('../../utils/appError');
 
 const customizationOptions = {};

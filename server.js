@@ -3,10 +3,10 @@ const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const morgan = require('morgan');
+//const morgan = require('morgan');
 const graphqlSchema = require('./graphQLSchema.js');
 const globaErrorHnadler = require('./controllers/errorController');
-const { isAuth } = require('./utils/isAuth');
+const { getMe } = require('./controllers/authController');
 const model = require('./models');
 
 const app = express();
@@ -19,7 +19,7 @@ const DB = process.env.DATABASE.replace(
 );
 
 app.use(cors());
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 
 const server = new ApolloServer({
   schema: graphqlSchema,
@@ -28,15 +28,14 @@ const server = new ApolloServer({
   introspection: true,
   tracing: true,
   path: '/',
-  context: ({ req }) => {
+  context: async ({ req }) => {
+    const me = await getMe(req);
     return {
-      req: req.headers.authorization,
+      req: me,
       model
     };
   }
 });
-
-app.use('/', isAuth);
 
 server.applyMiddleware({
   app,
