@@ -1,7 +1,8 @@
 const { composeWithMongoose } = require('graphql-compose-mongoose/node8');
-const jwt = require('jsonwebtoken');
+const { signToken } = require('../../controllers/authController');
 const User = require('../../models/userModel');
 const accessToken = require('../../utils/adminAccess');
+const AppError = require('../../utils/appError');
 
 const customizationOptions = {};
 const UserTC = composeWithMongoose(User, customizationOptions);
@@ -13,14 +14,6 @@ UserTC.addFields({
     description: 'Token of authenticated user.'
   }
 });
-
-//CREATE TOKEN
-
-const tokenSign = function(id) {
-  return jwt.sign({ userId: id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN
-  });
-};
 
 //LOGIN MUTATTION
 
@@ -39,18 +32,23 @@ UserTC.addResolver({
       model: { userModel }
     }
   }) => {
+    const { email, password } = args;
+    // 1) Check if email and password exist
+    if (!email || !password) {
+      return new AppError('Please provide email and password!', 400);
+    }
     let user = null;
 
-    user = await userModel.findOne({ email: args.email }).select('+password');
+    user = await userModel.findOne({ email: email }).select('+password');
 
     if (!user) {
       throw new Error('User does not exist.');
     }
-    const isEqual = await user.validatePassword(args.password, user.password);
+    const isEqual = await user.validatePassword(password, user.password);
     if (!isEqual) {
       throw new Error('Password is not correct.');
     }
-    const token = tokenSign(user.id);
+    const token = signToken(user.id);
 
     return {
       recordId: user._id,
