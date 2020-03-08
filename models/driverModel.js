@@ -7,7 +7,7 @@ const DriverSchema = new mongoose.Schema({
     required: [true, 'Driver Id is Required']
   },
   vehicleNumber: {
-    type: Number,
+    type: String,
     unique: true
   },
   trip: { type: Number }
